@@ -8,6 +8,16 @@ TODAY=$(date)
 DOMAIN=$1
 DIRECTORY=${DOMAIN}_recon
 HTML_REPORT="$DIRECTORY/subdomains_report.html"
+EXCLUDE_NMAP=false
+
+# Parse flags
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --exclude-nmap) EXCLUDE_NMAP=true ;;
+        *) DOMAIN=$1 ;;
+    esac
+    shift
+done
 
 #############
 # FUNCTIONS #
@@ -197,7 +207,12 @@ while IFS= read -r url; do
     echo "[ER] Running extra scans on subdomain $current_subdomain/$total_subdomains: $url"
     subdomain=$(echo $url | awk -F/ '{print $3}')
     safe_subdomain=$(echo $subdomain | sed 's/[^a-zA-Z0-9]/_/g')
-    nmap_scan "$subdomain"
+
+    # Run Nmap scan only if the flag to exclude it is not set
+    if [ "$EXCLUDE_NMAP" = false ]; then
+        nmap_scan "$subdomain"
+    fi
+
     wafw00f_scan "$url" "$safe_subdomain"
     whatweb_scan "$url" "$safe_subdomain"
     find_real_ip "$subdomain"
