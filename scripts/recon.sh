@@ -36,14 +36,14 @@ echo "
     ---- --  --- ---   |--|  |--  |   |  | | \ |
     |   |  |   |  |    |  \  |    |   |  | |  \|
     --- |  | ---  |    |   | ---  --- ---- |   |
-      # cODeD By JVANVS - 2024
+      # Sept 2024
 "
 }
 
-sublist3r_scan(){
-    echo "[ER] Running sublist3r on $DOMAIN..."
-    sublist3r -d $DOMAIN -o $DIRECTORY/sublist3r_raw.txt
-    grep -E "\.${DOMAIN}$" "$DIRECTORY/sublist3r_raw.txt" > "$DIRECTORY/sublist3r.txt"
+subfinder_scan(){
+    echo "[ER] Running subfinder on $DOMAIN..."
+    subfinder -d $DOMAIN -o $DIRECTORY/subfinder_raw.txt
+    grep -E "\.${DOMAIN}$" "$DIRECTORY/subfinder_raw.txt" > "$DIRECTORY/subfinder.txt"
 }
 
 crt_scan() {
@@ -53,7 +53,7 @@ crt_scan() {
 }
 
 merge_subdomain_lists(){
-    cat $DIRECTORY/sublist3r.txt $DIRECTORY/crt_results.txt | sort -u > $DIRECTORY/all_results.txt
+    cat $DIRECTORY/subfinder.txt $DIRECTORY/crt_results.txt | sort -u > $DIRECTORY/all_results.txt
 }
 
 check_responsive(){
@@ -86,6 +86,7 @@ find_real_ip() {
     echo "[ER] Finding real IP for $subdomain..."
     dig +short "$subdomain" > "$DIRECTORY/ip_$subdomain.txt"
 }
+
 
 generate_html_report() {
     echo "[ER] Creating HTML report"
@@ -193,7 +194,7 @@ EOF
 cleanup_and_setup
 logo
 echo "[ER] Scan date: $TODAY"
-sublist3r_scan
+subfinder_scan
 crt_scan
 merge_subdomain_lists
 check_responsive
@@ -216,6 +217,7 @@ while IFS= read -r url; do
     wafw00f_scan "$url" "$safe_subdomain"
     whatweb_scan "$url" "$safe_subdomain"
     find_real_ip "$subdomain"
+
 done < "$DIRECTORY/all_responsive.txt"
 
 generate_html_report
