@@ -1,0 +1,29 @@
+# Use Kali base image
+FROM kalilinux/kali-rolling
+
+# Update and upgrade the system
+RUN apt update && apt upgrade -y
+
+# Install the necessary packages
+RUN apt install -y \
+    procps \
+    net-tools \
+    iproute2 \
+    sudo
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y \
+    nikto \
+    nmap \
+    gobuster \
+    dirbuster \
+    metasploit-framework \
+    subfinder \
+    amass \
+    whatweb \
+    sqlmap \
+    seclists \
+    wordlists \
+    nuclei
+# Set the default command
+CMD ["bash"]

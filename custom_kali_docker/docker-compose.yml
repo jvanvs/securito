@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  kali:
+    build: .  # Use the Dockerfile in the current directory to build the image
+    container_name: kali-pentest
+    network_mode: host  # Share the host network stack for interaction with Burp/ZAP
+    volumes:
+      - kali_tools:/usr/share  # Persist tools installed in /usr/share
+      - kali_bin:/usr/local/bin  # Persist tools installed in /usr/local/bin
+      - ~/pentest:/mnt/pentest  # Share directory between host and container for pentest results
+    stdin_open: true
+    tty: true
+    restart: "no"
+
+volumes:
+  kali_tools:  # Persist tools installed in /usr/share
+  kali_bin:    # Persist binaries installed in /usr/local/bin
