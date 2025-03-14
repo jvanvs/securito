@@ -9,10 +9,11 @@ RUN apt install -y \
     procps \
     net-tools \
     iproute2 \
+    golang \
     sudo
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y \
+
+#Install tools from apt
+RUN apt install -y \
     nikto \
     nmap \
     gobuster \
@@ -24,6 +25,22 @@ RUN apt update && \
     sqlmap \
     seclists \
     wordlists \
-    nuclei
+    nuclei \
+    getallurls \
+    waybackpy
+
+#Install golang tools
+RUN go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest && \
+    go install github.com/tomnomnom/waybackurls@latest && \
+    go install github.com/lc/gau/v2/cmd/gau@latest && \
+    go install github.com/projectdiscovery/katana/cmd/katana@latest && \
+    go install github.com/hahwul/dalfox/v2@latest && \
+    cp ~/go/bin/httpx /usr/bin && \
+    cp ~/go/bin/waybackurls /usr/bin && \
+    cp ~/go/bin/gau /usr/bin && \
+    cp ~/go/bin/gf /usr/bin && \
+    cp ~/go/bin/katana /usr/bin && \
+    cp ~/go/bin/dalfox /usr/bin
+
 # Set the default command
 CMD ["bash"]
