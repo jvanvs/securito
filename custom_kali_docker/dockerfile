@@ -27,7 +27,8 @@ RUN apt install -y \
     wordlists \
     nuclei \
     getallurls \
-    waybackpy
+    waybackpy \
+    wafw00f
 
 #Install golang tools
 RUN go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest && \
